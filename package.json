@@ -2,14 +2,27 @@
   "name": "bun-env",
   "module": "index.ts",
   "type": "module",
+  "scripts": {
+    "build": "bun build --target=bun ./cli.ts --outdir dist/",
+    "compile": "bun build --compile --minify --sourcemap ./cli.ts --outfile ./werf-env-generator",
+    "format": "biome format ./cli.ts --write",
+    "format:ci": "biome format ./cli.ts",
+    "lint": "biome lint ./cli.ts --write",
+    "lint:ci": "biome lint ./cli.ts",
+    "check": "biome check ./cli.ts --write",
+    "check:ci": "biome check ./cli.ts",
+    "test": "bun test"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/node": "^20.14.1",
+    "@biomejs/biome": "^1.6.1"
+
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@types/js-yaml": "^4.0.9",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.0.9"
   }
 }
