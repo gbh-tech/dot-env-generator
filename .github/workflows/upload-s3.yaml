@@ -1,0 +1,65 @@
+name: 🚀 Deploy to S3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-s3:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [linux-x64, linux-arm64, windows-x64, darwin-arm64, darwin-x64]
+    steps:
+      - name: 💻 Checkout current code ref
+        uses: actions/checkout@v4
+
+      - name: 🟢 Configure Bun on runner
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: 📦 Install package dependencies using lockfile
+        run: bun install --frozen-lockfile
+
+      - name: 🔨 Run build
+        run: |
+          bun run build
+          bun run compile
+          bun build --compile --target=bun-${{ matrix.os }} ./cli.ts --outfile werf-env-generator-${{ matrix.os }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: 🚀 Upload to S3
+        run: |
+          OS=${{ matrix.os }}
+          case $OS in
+            linux-*)
+              PLATFORM="linux"
+              SUFFIX="${OS#linux-}"
+              ;;
+            windows-*)
+              PLATFORM="windows"
+              SUFFIX="${OS#windows-}.exe"
+              ;;
+            darwin-*)
+              PLATFORM="darwin"
+              SUFFIX="${OS#darwin-}"
+              ;;
+          esac
+
+          BIN="werf-env-generator-${SUFFIX}"
+
+          if [[ $PLATFORM == "windows" ]]; then
+            WERF_FILE=werf-env-generator-${{ matrix.os }}.exe
+          else
+            WERF_FILE=werf-env-generator-${{ matrix.os }}
+          fi
+
+          aws s3 cp ${WERF_FILE} s3://gbh-utils/${PLATFORM}/${BIN} --acl public-read
