@@ -1,6 +1,19 @@
-# werf-env-generator
+<!-- omit in toc -->
+# Werf Env File (.env) Generator
+
+<!-- omit in toc -->
+## Contents
+
+- [Summary](#summary)
+- [Install](#install)
+- [Run](#run)
+- [Compile](#compile)
+
+## Summary
 
 This is a simple tool that help us generate a .env based on the render of werf.
+
+## Install
 
 To install dependencies:
 
@@ -8,14 +21,18 @@ To install dependencies:
 bun install
 ```
 
+## Run
+
 To run:
 
 ```bash
-bun run index.ts
+./cli.ts --environment 'stage' --secrets
 ```
+
+## Compile
 
 To compile the project:
 
 ```bash
-bun build ./index.ts --compile --outfile env-generator
+bun build ./cli.ts --compile --outfile werf-env-generator
 ```

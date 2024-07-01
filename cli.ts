@@ -1,36 +1,57 @@
-import { execSync } from "node:child_process";
-import fs from "node:fs";
-import yaml from "js-yaml";
+#!/usr/bin/env bun
 
-let finalString = "";
+import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import { Command } from 'commander';
+import yaml from 'js-yaml';
+import { version } from './package.json';
+import type { yamlDoc } from './src/interfaces';
+import { stripEnvDataFrom } from './src/parser';
 
-interface yamlDoc {
-	data?: Record<string, unknown>;
-	stringData?: Record<string, unknown>;
-}
+const cli = new Command();
 
-const environment = process.argv[2] || "stage";
+cli
+  .name('werf-env-file-generator')
+  .version(version)
+  .summary('Werf Env-File Generator CLI')
+  .requiredOption(
+    '-e, --environment <env>',
+    'Target environment for which to generate the .env file',
+  )
+  .option(
+    '-s, --secrets',
+    'Whether to include secret files in the Werf command',
+    true,
+  )
+  .action((options) => {
+    const environment = options.environment;
 
-const werf_render = execSync(
-	`werf render --env ${environment} --values .helm/values/${environment}.yaml --secret-values .helm/secrets/${environment}.yaml --dev`,
-	{ encoding: "utf-8" },
-);
+    const werfCommand = [
+      'werf',
+      'render',
+      `--env ${environment}`,
+      `--values .helm/values/${environment}.yaml`,
+      '--dev',
+    ];
 
-const docs = yaml.loadAll(werf_render) as yamlDoc[];
+    if (options.secrets) {
+      werfCommand.push(`--secret-values .helm/secrets/${environment}.yaml`);
+    }
 
-for (const doc of docs) {
-	if (doc.data) {
-		finalString += JSON.stringify(doc.data);
-	}
-	if (doc.stringData) {
-		finalString += JSON.stringify(doc.stringData);
-	}
-}
+    console.log('Werf command:');
+    console.log(werfCommand);
 
-const parsed = finalString
-	.replaceAll(",", "\n")
-	.replaceAll('":"', '"="')
-	.replaceAll(/{|}|undefined|"/g, "");
+    const renderedManifests = execSync(werfCommand.join(' ').trim(), {
+      encoding: 'utf-8',
+    });
 
-fs.writeFileSync(".env", parsed);
-console.log(".env generated!");
+    console.log('Obtaining env vars from rendered manifests...');
+    const manifests = yaml.loadAll(renderedManifests) as yamlDoc[];
+    const envData = stripEnvDataFrom(manifests);
+
+    fs.writeFileSync('.env', envData);
+
+    console.log('.env generated!');
+  });
+
+cli.parse();

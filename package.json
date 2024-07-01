@@ -1,29 +1,32 @@
 {
-  "name": "bun-env",
-  "module": "index.ts",
+  "name": "werf-env-file-generator",
+  "version": "0.0.2",
+  "module": "cli.ts",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "bun build --target=bun ./cli.ts --outdir dist/",
     "compile": "bun build --compile --minify --sourcemap ./cli.ts --outfile ./werf-env-generator",
-    "format": "biome format ./cli.ts --write",
-    "format:ci": "biome format ./cli.ts",
-    "lint": "biome lint ./cli.ts --write",
-    "lint:ci": "biome lint ./cli.ts",
-    "check": "biome check ./cli.ts --write",
-    "check:ci": "biome check ./cli.ts",
-    "test": "bun test"
+    "format": "biome format ./cli.ts ./src ./test --write",
+    "format:ci": "biome format ./cli.ts ./src ./test",
+    "lint": "biome lint ./cli.ts ./src ./test --write",
+    "lint:ci": "biome lint ./cli.ts ./src ./test",
+    "check": "biome check ./cli.ts ./src ./test --write",
+    "check:ci": "biome check ./cli.ts ./src ./test",
+    "test": "bun test --coverage"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.6.1",
     "@types/bun": "latest",
-    "@types/node": "^20.14.1",
-    "@biomejs/biome": "^1.6.1"
-
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.14.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "js-yaml": "^4.0.9",
-    "@types/js-yaml": "^4.0.9"
+    "@inquirer/prompts": "^5.1.0",
+    "commander": "^12.1.0",
+    "js-yaml": "^4.0.9"
   }
 }
