@@ -177,3 +177,4 @@ dist
 
 # Binary
 werf-env-generator*
+.werf_secret_key

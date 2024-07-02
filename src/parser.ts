@@ -1,23 +1,27 @@
-import type { EnvironmentVariables, yamlDoc } from './interfaces';
+import fs from 'node:fs';
+import type { EnvVarObject, yamlDoc } from './interfaces';
 
-export function parseEnvDataToString(data: EnvironmentVariables) {
-  return Object.entries(data)
-    .map(([key, value]) => `${key}='${value}'`)
-    .join('\n');
-}
+export function mergeDataFromManifests(manifests: yamlDoc[]) {
+  const envData = {};
 
-export function stripEnvDataFrom(manifests: yamlDoc[]) {
-  let envData = '';
-
-  for (const doc of manifests) {
-    if (doc.data) {
-      envData += parseEnvDataToString(doc.data);
+  for (const manifest of manifests) {
+    if (manifest.data) {
+      Object.assign(envData, manifest.data);
     }
 
-    if (doc.stringData) {
-      envData += parseEnvDataToString(doc.stringData);
+    if (manifest.stringData) {
+      Object.assign(envData, manifest.stringData);
     }
   }
 
   return envData;
+}
+
+export function generateEnvFile(envObject: EnvVarObject, filePath: string) {
+  const envContent = Object.entries(envObject)
+    .map(([key, value]) => `${key}='${value}'`)
+    .join('\n');
+
+  fs.writeFileSync(filePath, envContent, 'utf8');
+  console.log('.env generated!');
 }

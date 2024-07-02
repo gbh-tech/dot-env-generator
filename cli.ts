@@ -1,12 +1,11 @@
 #!/usr/bin/env bun
 
 import { execSync } from 'node:child_process';
-import fs from 'node:fs';
 import { Command } from 'commander';
 import yaml from 'js-yaml';
 import { version } from './package.json';
 import type { yamlDoc } from './src/interfaces';
-import { stripEnvDataFrom } from './src/parser';
+import { generateEnvFile, mergeDataFromManifests } from './src/parser';
 
 const cli = new Command();
 
@@ -47,11 +46,12 @@ cli
 
     console.log('Obtaining env vars from rendered manifests...');
     const manifests = yaml.loadAll(renderedManifests) as yamlDoc[];
-    const envData = stripEnvDataFrom(manifests);
 
-    fs.writeFileSync('.env', envData);
+    const envData = mergeDataFromManifests(manifests);
 
-    console.log('.env generated!');
+    generateEnvFile(envData, '.env');
   });
 
-cli.parse();
+cli.parse(['--environment', 'stage'], {
+  from: 'user',
+});

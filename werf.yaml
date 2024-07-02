@@ -1,0 +1,5 @@
+project: werf-env-file-generator
+configVersion: 1
+build:
+  platform:
+    - linux/amd64

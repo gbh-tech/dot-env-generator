@@ -1,0 +1,79 @@
+version: '3'
+
+vars:
+  ENVIRONMENT: '{{.ENVIRONMENT}}'
+  COMMAND: '{{.COMMAND}}'
+
+tasks:
+# Tasks: Werf commands
+  command:
+    cmds:
+      - task: check-secret-key
+      - werf {{.COMMAND}}
+        --env {{.ENVIRONMENT}}
+        --values .helm/values/{{.ENVIRONMENT}}.yaml
+         --secret-values .helm/secrets/{{.ENVIRONMENT}}.yaml
+        --dev
+
+  command-with-repo:
+    cmds:
+      - task: check-secret-key
+      - werf {{.COMMAND}}
+        --env {{.ENVIRONMENT}}
+        --repo $ECR_URL/{{.ENVIRONMENT}}/$PROJECT
+        --values .helm/values/{{.ENVIRONMENT}}.yaml
+         --secret-values .helm/secrets/{{.ENVIRONMENT}}.yaml
+        --dev
+
+  build:
+    cmds:
+      - task: check-secret-key
+      - werf build --repo $ECR_URL/{{.ENVIRONMENT}}/$PROJECT --dev
+
+  dismiss:
+    cmds:
+      - werf dismiss --namespace $APP_NAME-{{.ENVIRONMENT}} --dev
+
+  export:
+    cmds:
+      - task: check-secret-key
+      - werf export
+        --repo $ECR_URL/{{.ENVIRONMENT}}/$PROJECT
+        --tag $ECR_URL/{{.ENVIRONMENT}}/$PROJECT:{{.ENVIRONMENT}}
+        --dev
+
+  secrets:
+    cmds:
+      - task: check-secret-key
+      - werf helm secret values {{.SECRET_COMMAND}}
+        .helm/secrets/{{.ENVIRONMENT}}.yaml
+        -o .helm/secrets/{{.ENVIRONMENT}}.yaml
+
+  secrets-base:
+    cmds:
+      - task: check-secret-key
+      - werf helm secret values {{.SECRET_COMMAND}}
+        .helm/secret-values.yaml
+        -o .helm/secret-values.yaml
+
+# Utils: Check werf secret key
+  check-secret-key:
+    internal: true
+    silent: true
+    preconditions:
+      - sh: 'test -f .werf_secret_key'
+        msg: '.werf_secret_key file does not exist.'
+
+  # Utils: Check werf env generator
+  download-env-generator:
+    internal: true
+    desc: 'Check if werf-env-generate exists, if not, download it.'
+    vars:
+      OS: '{{.OS}}'
+      ARCH: '{{ "x64" | default .ARCH}}'
+    cmds:
+      - curl -O https://gbh-utils.s3.amazonaws.com/{{.OS}}/werf-env-generator-{{.ARCH}}
+      - mv werf-env-generator-{{.ARCH}} werf-env-generator
+      - chmod +x werf-env-generator
+    status:
+      - test -f werf-env-generator

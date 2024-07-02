@@ -3,6 +3,6 @@ export interface yamlDoc {
   stringData?: Record<string, string>;
 }
 
-export type EnvironmentVariables = {
+export type EnvVarObject = {
   [key: string]: string;
 };

@@ -1,0 +1,53 @@
+version: '3'
+
+includes:
+  werf:
+    taskfile: .ops/taskfiles/werf.yaml
+    internal: true
+  system:
+    taskfile: .ops/taskfiles/system.yaml
+
+env:
+  PROJECT: 'werf-env-generator'
+
+tasks:
+# Tasks: Werf
+  render:
+    desc: Renders the application chart with 'werf render'.
+    vars:
+      ENVIRONMENT: '{{.ENVIRONMENT | default .CLI_ARGS}}'
+    cmds:
+      - task: werf:command
+        vars: {
+          COMMAND: 'render',
+          ENVIRONMENT: '{{.ENVIRONMENT}}'
+        }
+
+  generate-env:
+    desc: Generates the .env of the provided environment from Werf
+    vars:
+      ENVIRONMENT: '{{.ENVIRONMENT | default .CLI_ARGS}}'
+    cmds:
+      - task: werf:download-env-generator
+        vars:
+          OS:
+            sh: task system:os
+      - ./werf-env-generator -e '{{.ENVIRONMENT}}'
+
+  decrypt:
+    desc: Decrypts secret values with 'werf helm secret values decrypt'.
+    cmds:
+      - task: werf:secrets
+        vars: {
+          SECRET_COMMAND: 'decrypt',
+          ENVIRONMENT: '{{.CLI_ARGS}}'
+        }
+
+  encrypt:
+    desc: Encrypts secret values with 'werf helm secret values encrypt'.
+    cmds:
+      - task: werf:secrets
+        vars: {
+          SECRET_COMMAND: 'encrypt',
+          ENVIRONMENT: '{{.CLI_ARGS}}'
+        }
