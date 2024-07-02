@@ -23,5 +23,5 @@ export function generateEnvFile(envObject: EnvVarObject, filePath: string) {
     .join('\n');
 
   fs.writeFileSync(filePath, envContent, 'utf8');
-  console.log('.env generated!');
+  console.log(`dotenv file generated in ${filePath}!`);
 }
