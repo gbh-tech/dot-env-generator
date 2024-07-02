@@ -25,7 +25,7 @@ cli
   .option(
     '-p, --to-path <path...>',
     'Path(s) to generate the .env file to',
-    '.env',
+    ['.env'],
   )
   .action((options) => {
     const environment = options.environment;
