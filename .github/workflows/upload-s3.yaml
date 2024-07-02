@@ -24,10 +24,16 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 🔨 Run build
-        run: |
-          bun run build
-          bun run compile
-          bun build --compile --target=bun-${{ matrix.os }} ./cli.ts --outfile werf-env-generator-${{ matrix.os }}
+        run: bun run build
+
+      - name: 🔨 Compile binary for supported platforms
+        run: bun build
+             --compile
+             --target=bun-${{ matrix.os }}
+             --minify
+             --sourcemap
+             ./cli.ts
+             --outfile werf-env-generator-${{ matrix.os }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
