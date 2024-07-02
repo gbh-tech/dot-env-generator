@@ -52,6 +52,4 @@ cli
     generateEnvFile(envData, '.env');
   });
 
-cli.parse(['--environment', 'stage'], {
-  from: 'user',
-});
+cli.parse();
