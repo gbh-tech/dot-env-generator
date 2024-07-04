@@ -22,9 +22,11 @@ cli
     'Whether to include secret files in the Werf command',
     true,
   )
-  .option('-p, --to-path <path...>', 'Path(s) to generate the .env file to', [
-    '.env',
-  ])
+  .option(
+    '-p, --to-path <path...>',
+    'Path(s) to generate the dot env (.env) file to',
+    ['.env'],
+  )
   .action((options) => {
     const environment = options.environment.trim();
 

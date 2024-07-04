@@ -20,6 +20,13 @@ jobs:
         with:
           bun-version: latest
 
+      - name: ☁️ Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'us-east-1'
+
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
 
@@ -35,14 +42,15 @@ jobs:
              ./cli.ts
              --outfile werf-env-generator-${{ matrix.os }}
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+      - name: 🔨 Compile binary for CI
+        run: bun build
+             --compile
+             --minify
+             --sourcemap
+             ./cli.ts
+             --outfile werf-env-generator-ci
 
-      - name: 🚀 Upload to S3
+      - name: 🚀 Upload binaries to S3
         run: |
           OS=${{ matrix.os }}
           case $OS in
@@ -60,12 +68,15 @@ jobs:
               ;;
           esac
 
-          BIN="werf-env-generator-${SUFFIX}"
+          BUCKET="s3://gbh-utils"
+          NAME="werf-env-generator"
+          BIN="${NAME}-${SUFFIX}"
 
           if [[ $PLATFORM == "windows" ]]; then
-            WERF_FILE=werf-env-generator-${{ matrix.os }}.exe
+            WERF_FILE=${NAME}-${{ matrix.os }}.exe
           else
-            WERF_FILE=werf-env-generator-${{ matrix.os }}
+            WERF_FILE=${NAME}-${{ matrix.os }}
           fi
 
-          aws s3 cp ${WERF_FILE} s3://gbh-utils/${PLATFORM}/${BIN} --acl public-read
+          aws s3 cp ${WERF_FILE} ${BUCKET}/${PLATFORM}/${BIN} --acl public-read
+          aws s3 sync ${NAME}-ci ${BUCKET}/${NAME} --acl public-read --delete
