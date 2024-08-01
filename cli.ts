@@ -13,6 +13,7 @@ cli
   .name('werf-env-file-generator')
   .version(version)
   .summary('Werf Env-File Generator CLI')
+  .option('-v,--values <variable>', 'Set extra environment values')
   .requiredOption(
     '-e, --environment <env>',
     'Target environment for which to generate the .env file',
@@ -40,6 +41,11 @@ cli
 
     if (options.secrets) {
       werfCommand.push(`--secret-values .helm/secrets/${environment}.yaml`);
+    }
+
+    if (options.values) {
+      const extra_vars = options.values.trim();
+      werfCommand.push(`--set ${extra_vars}`);
     }
 
     console.log('Werf command:');

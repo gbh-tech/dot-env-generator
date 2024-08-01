@@ -24,6 +24,10 @@ backendEnvironmentVariables:
   SOME_VAR_PATH: 'v2.0/.well-known/openid-configuration'
   SOME_VAR_SCOPES: 'HEY.THERE,COMPLEX.VALUE.HERE'
 
+  EXTRA_VAR: "{{ $.Values.some_extra_var }}"
+  EXTRA_VAR2: "{{ $.Values.some_extra_var2 }}"
+
+
 # Frontend - Environment Variables
 frontendEnvironmentVariables:
   # Environment settings
