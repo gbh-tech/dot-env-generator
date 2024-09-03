@@ -2,6 +2,8 @@ name: 📝 Lint
 
 on:
   pull_request:
+    branches:
+      - main
 
 concurrency:
   group: '${{ github.workflow }} @ ${{ github.head_ref || github.ref }}'
@@ -50,5 +52,6 @@ jobs:
           --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }}
           --to ${{ github.event.pull_request.head.sha }}
           --verbose
+
       - name: 🔎 Validate PR title with commitlint
         run: echo "${{ github.event.pull_request.title }}" | npx commitlint

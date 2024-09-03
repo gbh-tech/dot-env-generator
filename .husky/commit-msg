@@ -1,3 +1,6 @@
 #!/usr/bin/env sh
 
 npx --no -- commitlint --edit ${1}
+bun run lint
+bun run format
+bun run check
