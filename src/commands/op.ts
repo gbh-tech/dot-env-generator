@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { createClient } from "@1password/sdk";
+import type { EnvVarObject } from '../interfaces'
 import { generateEnvFile } from '../parser';
 import { name, version } from '../../package.json';
 
@@ -37,12 +38,11 @@ export const onePasswordCommand = () => {
         
       for (const item of items) {
         const vaultItem = await client.items.get(vault, item);
-
-        const secret = vaultItem.fields.map(obj=> ({ title: obj.title, value: obj.value }));
-
-        const envData = secret.reduce(
-          (obj, item) => Object.assign(obj, { [item.title]: item.value }), {});
         
+        const envData = vaultItem.fields.reduce((key, item) => {
+          key[item.title] = item.value;
+          return key;
+        }, {} as EnvVarObject);
 
         for (const path of options.toPath) {
           generateEnvFile(envData, path);
