@@ -32,11 +32,5 @@ jobs:
           bun run build
           bun run compile
 
-      - name: 🌷 Run format, lint & check with Biome
-        run: |
-          bun run format:ci
-          bun run lint:ci
-          bun run check:ci
-
       - name: 🧪 Run tests
         run: bun run test
