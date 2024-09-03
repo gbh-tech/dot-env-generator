@@ -4,8 +4,6 @@ includes:
   werf:
     taskfile: .ops/taskfiles/werf.yaml
     internal: true
-  system:
-    taskfile: .ops/taskfiles/system.yaml
 
 env:
   PROJECT: 'dot-env-generator'
@@ -28,6 +26,7 @@ tasks:
     vars:
       ENVIRONMENT: '{{.ENVIRONMENT | default .CLI_ARGS}}'
     cmds:
+      - bun run compile
       - ./dot-env-generator werf -e '{{.ENVIRONMENT}}'
 
   decrypt:
