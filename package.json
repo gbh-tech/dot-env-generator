@@ -51,7 +51,7 @@
     "github": {
       "release": false,
       "releaseName": "v${version}",
-      "assets": ["dist/dot-env-generator*"]
+      "assets": ["dist/*tar.gz"]
     },
     "git": {
       "commitMessage": "chore: release v${version}",

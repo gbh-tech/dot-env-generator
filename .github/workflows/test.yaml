@@ -31,7 +31,9 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 🔨 Compile binary for supported platforms
-        run: task build-and-compress
+        run: |
+          mkdir -p ./dist/  
+          task build-and-compress
 
       - name: 🧪 Run tests
         run: bun run test
