@@ -18,8 +18,7 @@ export const onePasswordCommand = () => {
     )
     .requiredOption(
       '-i, --item <item...>',
-      'Target secret for which to generate the .env file',
-      []
+      'Target secret for which to generate the .env file'
     )
     .option(
       '-p, --to-path <path...>',
