@@ -4,6 +4,7 @@
   "description": "dot env file generator based on multiple providers",
   "module": "cli.ts",
   "license": "MIT",
+  "private" : true,
   "type": "module",
   "scripts": {
     "build": "bun build --target=bun ./cli.ts --outdir dist/",
@@ -61,8 +62,14 @@
       "tagExclude": "*[-]*",
       "push": true,
       "release": true,
-      "pushArgs": ["--no-verify", "--follow-tags", "--force"],
-      "commitArgs": ["--no-verify"]
+      "pushArgs": [
+        "--no-verify",
+        "--follow-tags",
+        "--force"
+      ],
+      "commitArgs": [
+        "--no-verify"
+      ]
     },
     "plugins": {
       "@release-it/conventional-changelog": {

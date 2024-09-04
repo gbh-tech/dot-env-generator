@@ -36,7 +36,7 @@ jobs:
           task build
           task compress
 
-      - name: 🚀 Run new version for production
+      - name: 🚀 Release a new version
         run: npx release-it --ci
         env:
           GITHUB_TOKEN: ${{ secrets.DEVOPS_USER_TOKEN }}
