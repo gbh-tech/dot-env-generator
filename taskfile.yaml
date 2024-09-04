@@ -4,11 +4,9 @@ includes:
   werf:
     taskfile: .ops/taskfiles/werf.yaml
     internal: true
-  system:
-    taskfile: .ops/taskfiles/system.yaml
 
 env:
-  PROJECT: 'werf-env-generator'
+  PROJECT: 'dot-env-generator'
 
 tasks:
 # Tasks: Werf
@@ -23,16 +21,13 @@ tasks:
           ENVIRONMENT: '{{.ENVIRONMENT}}'
         }
 
-  generate-env:
+  generate-env-werf:
     desc: Generates the .env of the provided environment from Werf
     vars:
       ENVIRONMENT: '{{.ENVIRONMENT | default .CLI_ARGS}}'
     cmds:
-      - task: werf:download-env-generator
-        vars:
-          OS:
-            sh: task system:os
-      - ./werf-env-generator -e '{{.ENVIRONMENT}}'
+      - bun run compile
+      - ./dot-env-generator werf -e '{{.ENVIRONMENT}}'
 
   decrypt:
     desc: Decrypts secret values with 'werf helm secret values decrypt'.
@@ -51,3 +46,25 @@ tasks:
           SECRET_COMMAND: 'encrypt',
           ENVIRONMENT: '{{.CLI_ARGS}}'
         }
+
+  build:
+    desc: "Compile binary for supported platforms"
+    cmds:
+      - for: ['linux-x64', 'linux-arm64', 'darwin-arm64', 'darwin-x64']
+        cmd: |
+          echo "Compiling for {{.ITEM}}..."
+          bun build \
+            --compile \
+            --target=bun-{{.ITEM}} \
+            --minify \
+            --sourcemap \
+            ./cli.ts \
+            --outfile ./dist/$PROJECT-{{.ITEM}}
+
+  compress:
+    desc: "Compress the binaries"
+    cmds:
+      - for: ['linux-x64', 'linux-arm64', 'darwin-arm64', 'darwin-x64']
+        cmd: |
+          echo "Compressing {{.ITEM}} binary..."
+          tar -czvf ./dist/$PROJECT-{{.ITEM}}.tar.gz -C ./dist/ $PROJECT-{{.ITEM}}

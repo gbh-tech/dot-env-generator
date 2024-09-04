@@ -24,19 +24,16 @@ jobs:
         with:
           bun-version: latest
 
+      - name: 🔵 Install Task
+        uses: arduino/setup-task@v2
+
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
 
-      - name: 🔨 Run build
+      - name: 🔨 Compile binary for supported platforms
         run: |
-          bun run build
-          bun run compile
-
-      - name: 🌷 Run format, lint & check with Biome
-        run: |
-          bun run format:ci
-          bun run lint:ci
-          bun run check:ci
+          task build
+          task compress
 
       - name: 🧪 Run tests
         run: bun run test

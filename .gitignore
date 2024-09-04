@@ -176,5 +176,5 @@ dist
 .DS_Store
 
 # Binary
-werf-env-generator*
+dot-env-generator*
 .werf_secret_key
