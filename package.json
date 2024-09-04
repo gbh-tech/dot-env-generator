@@ -1,10 +1,10 @@
 {
   "name": "dot-env-generator",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "dot env file generator based on multiple providers",
   "module": "cli.ts",
   "license": "MIT",
-  "private" : true,
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "bun build --target=bun ./cli.ts --outdir dist/",
@@ -45,14 +45,18 @@
   },
   "renovate": {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended"],
+    "extends": [
+      "config:recommended"
+    ],
     "prConcurrentLimit": 2
   },
   "release-it": {
     "github": {
       "release": false,
       "releaseName": "v${version}",
-      "assets": ["dist/*tar.gz"]
+      "assets": [
+        "dist/*tar.gz"
+      ]
     },
     "git": {
       "commitMessage": "chore: release v${version}",
