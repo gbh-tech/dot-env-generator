@@ -24,7 +24,7 @@ export function generateEnvFile(envObject: EnvVarObject, filePath: string) {
     for (const line of existingContent) {
       if (line.length !== 0 && !line.startsWith('#')) {
         const [key, value] = line.split(/=(.+)/s);
-        if (!envObject.hasOwnProperty(key)) {
+        if (!(Object.hasOwn(envObject, key))) {
           // Save value to object and remove quotes from value
           envObject[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '');
         }
