@@ -19,13 +19,15 @@ export function mergeDataFromManifests(manifests: yamlDoc[]) {
 
 export function generateEnvFile(envObject: EnvVarObject, filePath: string) {
   if (fs.existsSync(filePath)) {
-    let existingContent = '';
-    existingContent = fs.readFileSync(filePath, 'utf8');
+    const existingContent = fs.readFileSync(filePath, 'utf8').split('\n');
 
-    for (const line of existingContent.split('\n')) {
-      if (line.trim() && !line.startsWith('#')) {
-        const [key, value] = line.split('=');
-        envObject[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '');
+    for (const line of existingContent) {
+      if (line.length !== 0 && !line.startsWith('#')) {
+        const [key, value] = line.split(/=(.+)/s);
+        if (!envObject.hasOwnProperty(key)) {
+          // Save value to object and remove quotes from value
+          envObject[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '');
+        }
       }
     }
   }
