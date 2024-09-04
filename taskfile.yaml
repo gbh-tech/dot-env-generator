@@ -68,7 +68,3 @@ tasks:
         cmd: |
           echo "Compressing {{.ITEM}} binary..."
           tar -czvf ./dist/$PROJECT-{{.ITEM}}.tar.gz -C ./dist/ $PROJECT-{{.ITEM}}
-
-  build-and-compress:
-    desc: "Build and compress binaries for all platforms"
-    deps: [build, compress]

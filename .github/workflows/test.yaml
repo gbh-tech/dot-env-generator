@@ -32,8 +32,8 @@ jobs:
 
       - name: 🔨 Compile binary for supported platforms
         run: |
-          mkdir -p ./dist/  
-          task build-and-compress
+          task build
+          task compress
 
       - name: 🧪 Run tests
         run: bun run test

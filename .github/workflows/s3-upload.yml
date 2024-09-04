@@ -37,11 +37,10 @@ jobs:
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
 
-      - name: 🔨 Run build
-        run: bun run build
-
       - name: 🔨 Compile binary for supported platforms
-        run: task build-and-compress
+        run: |
+          task build
+          task compress
 
       - name: 🚀 Upload binaries to S3
         run: aws s3 cp ./dist ${BUCKET}/${NAME} --acl public-read

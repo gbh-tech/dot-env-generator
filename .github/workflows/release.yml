@@ -32,7 +32,9 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 🔨 Compile binary for supported platforms
-        run: task build-and-compress
+        run: |
+          task build
+          task compress
 
       - name: 🚀 Run new version for production
         run: npx release-it --ci
