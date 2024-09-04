@@ -22,9 +22,6 @@ jobs:
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
 
-      - name: 🔨 Run build
-        run: bun run build
-
       - name: 🌷 Run format, lint & check with Biome
         run: |
           bun run format
@@ -42,8 +39,8 @@ jobs:
       - name: 🟢 Configure Bun on runner
         uses: oven-sh/setup-bun@v1
 
-      - name: 🚧 Install dev dependencies
-        run: npm install --only=dev
+      - name: 📦 Install package dependencies using lockfile
+        run: bun install --frozen-lockfile
 
         # Check all commits pushed to this PR
       - name: 👁️‍🗨️ Validate PR commits with commitlint
