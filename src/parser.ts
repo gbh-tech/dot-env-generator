@@ -21,13 +21,13 @@ export function generateEnvFile(envObject: EnvVarObject, filePath: string) {
   if (fs.existsSync(filePath)) {
     let existingContent = '';
     existingContent = fs.readFileSync(filePath, 'utf8');
-    
-    existingContent.split('\n').forEach(line => {
+
+    for (const line of existingContent.split('\n')) {
       if (line.trim() && !line.startsWith('#')) {
         const [key, value] = line.split('=');
         envObject[key.trim()] = value.trim().replace(/^['"]|['"]$/g, '');
       }
-    });
+    }
   }
 
   const envContent = Object.entries(envObject)
