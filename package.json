@@ -52,7 +52,7 @@
   },
   "release-it": {
     "github": {
-      "release": false,
+      "release": true,
       "releaseName": "v${version}",
       "assets": [
         "dist/*tar.gz"
