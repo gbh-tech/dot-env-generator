@@ -47,7 +47,7 @@ tasks:
           ENVIRONMENT: '{{.CLI_ARGS}}'
         }
 
-  build:
+  compile:
     desc: "Compile binary for supported platforms"
     cmds:
       - for: ['linux-x64', 'linux-arm64', 'darwin-arm64', 'darwin-x64']
@@ -58,7 +58,7 @@ tasks:
             --target=bun-{{.ITEM}} \
             --minify \
             --sourcemap \
-            ./cli.ts \
+            ./dist/cli.js \
             --outfile ./dist/$PROJECT-{{.ITEM}}
 
   compress:
