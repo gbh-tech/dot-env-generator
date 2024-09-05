@@ -36,6 +36,9 @@ jobs:
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
       - name: 📦 Install package dependencies using lockfile
+        run: docker ps
+        
+      - name: 📦 Install package dependencies using lockfile
         run: docker exec
             -t bun
             bun install -g @go-task/cli
