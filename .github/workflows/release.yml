@@ -5,7 +5,14 @@ on:
 
 jobs:
   release:
-    runs-on: ARM64
+    runs-on: ubuntu-latest
+    services:
+       bun:
+        image: oven/bun:alpine
+        options: > 
+          --volume /home/runner/work/${{ github.repository }}:/workspace
+          --workdir /workspace
+
     steps:
       - name: 💻 Checkout current pull-request revision code
         uses: actions/checkout@v4
@@ -18,8 +25,8 @@ jobs:
         with:
           bun-version: latest
         
-      - name: 🔵 Install Task
-        uses: arduino/setup-task@v2
+      # - name: 🔵 Install Task
+      #   uses: arduino/setup-task@v2
   
       - name: 💼 Configure Git user
         run: |
@@ -28,14 +35,30 @@ jobs:
 
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
+      - name: 📦 Install package dependencies using lockfile
+        run: docker exec
+            -t bun
+            bun install -g @go-task/cli
+            bun install --frozen-lockfile
 
       - name: 🔨 Run build
-        run: bun run build
+        run: docker exec
+          -t bun 
+          bun run build
 
       - name: 🔨 Compile binary for supported platforms
-        run: |
+        run: docker exec
+          -t bun
           task compile
           task compress
+   
+          
+      - name: 🔨 Compile binary for supported platforms
+        run: docker exec
+          -t bun
+          cp -r
+          /workspace/dist
+          ./dist
 
       - name: 🚀 Release a new version
         run: bun release-it --ci
