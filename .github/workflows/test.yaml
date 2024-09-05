@@ -30,9 +30,12 @@ jobs:
       - name: 📦 Install package dependencies using lockfile
         run: bun install --frozen-lockfile
 
+      - name: 🔨 Run build
+        run: bun run build
+
       - name: 🔨 Compile binary for supported platforms
         run: |
-          task build
+          task compile
           task compress
 
       - name: 🧪 Run tests
