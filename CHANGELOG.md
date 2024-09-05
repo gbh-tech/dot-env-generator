@@ -1,5 +1,14 @@
 
 
+## [0.3.1](https://github.com/gbh-tech/dot-env-generator/compare/v0.3.0...v0.3.1) (2024-09-05)
+
+
+### Miscellaneous
+
+* (DSO-00) Update readme file ([3801971](https://github.com/gbh-tech/dot-env-generator/commit/3801971021bb87536d7285728e732a39f67f9fba))
+* (RI-4198) Fix compile tasks for releases ([17e0a92](https://github.com/gbh-tech/dot-env-generator/commit/17e0a92fc60269a821ec24626ab4ed1ea4839ac4))
+* (RI-4198) Update test action ([6cf1853](https://github.com/gbh-tech/dot-env-generator/commit/6cf18539cea6d0d44a7bc0dfa812db587877c802))
+
 ## 0.3.0 (2024-09-04)
 
 
