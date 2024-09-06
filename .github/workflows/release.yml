@@ -22,9 +22,10 @@ jobs:
         
       - name: 🔵 Install Task
         uses: arduino/setup-task@v2
-  
+
       - name: 💼 Configure Git user
         run: |
+          apk add git
           git config user.name "gbh-devops-bot"
           git config user.email "devops@gbh.com.do"
 
