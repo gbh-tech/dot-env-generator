@@ -7,7 +7,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     container:
-      image: alpine:latest
+      image: oven/bun:slim
     steps:
       - name: 💻 Checkout current pull-request revision code
         uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
 
       - name: 💼 Configure Git user
         run: |
-          apk add git
+          apt install git
           git config user.name "gbh-devops-bot"
           git config user.email "devops@gbh.com.do"
 
