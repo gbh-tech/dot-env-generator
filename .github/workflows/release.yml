@@ -15,10 +15,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.DEVOPS_USER_TOKEN }}
 
-      - name: 🟢 Configure Bun on runner
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
+      # - name: 🟢 Configure Bun on runner
+      #   uses: oven-sh/setup-bun@v1
+      #   with:
+      #     bun-version: latest
         
       - name: 🔵 Install Task
         uses: arduino/setup-task@v2
