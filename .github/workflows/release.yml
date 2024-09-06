@@ -7,7 +7,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     container:
-      image: oven/bun:alpine
+      image: alpine:latest
     steps:
       - name: 💻 Checkout current pull-request revision code
         uses: actions/checkout@v4
