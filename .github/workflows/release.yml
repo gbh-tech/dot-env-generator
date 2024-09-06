@@ -25,7 +25,6 @@ jobs:
 
       - name: 💼 Configure Git user
         run: |
-          apt install git
           git config user.name "gbh-devops-bot"
           git config user.email "devops@gbh.com.do"
 
