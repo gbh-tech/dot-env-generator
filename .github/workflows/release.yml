@@ -20,7 +20,7 @@ jobs:
         
       - name: 🔵 Install Task
         uses: arduino/setup-task@v2
-  
+
       - name: 💼 Configure Git user
         run: |
           git config user.name "gbh-devops-bot"
